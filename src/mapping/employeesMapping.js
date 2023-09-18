@@ -3,7 +3,7 @@ import sql from 'mssql';
 class EmployeesFieldMappings {
   constructor() {
     this.fieldMappings = {
-      codigo: sql.VarChar,
+      codigo: sql.VarChar(4),
       primerNombre: sql.VarChar,
       segundoNombre: sql.VarChar,
       primerApellido: sql.VarChar,
