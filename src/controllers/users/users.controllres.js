@@ -1,11 +1,45 @@
+import { response } from "express";
 import { getConnection, users_queries } from "../../database";
-import { generateJWT } from "../../helpers/jwt";
-import UsersMapping from "../../mapping/usersMapping";
+import UsersFieldMapping from "../../mapping/usersMapping";
+import UsuariosModel from "../../models/users.model";
 require('dotenv').config(); // Carga las variables de entorno desde el archivo .env
-const secretKey = process.env.SECRET_KEY; // Obtiene la clave secreta desde las variables de entorno
-const usersMapping = UsersMapping.getMappings();
 
+const bcrypt = require ('bcryptjs');
 const jwt = require("jsonwebtoken"); //se requiere el servicio de jsonwebtoken
+
+
+export const newUser = async (req, res = response) => {
+  try {
+    const usuarioModel = new UsuariosModel(req.body);
+
+    // Genera un hash seguro para la contraseña
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(usuarioModel.password, saltRounds);
+
+    // Actualiza la contraseña en el modelo con el hash
+    usuarioModel.password = hashedPassword;
+
+    const pool = await getConnection();
+    const request = pool.request();
+
+    const usuarioMapping = UsersFieldMapping.getMappings();
+
+    for (const fieldName in usuarioMapping) {
+      // El recorrido rellena los campos que se solicitan
+      request.input(
+        fieldName,
+        usuarioMapping[fieldName],
+        usuarioModel[fieldName]
+      );
+    }
+
+    await request.query(users_queries.newUser);
+    res.json(usuarioModel);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, msg: 'Error Inesperado, hable con el administrador' });
+  }
+}
 
 
 /**
