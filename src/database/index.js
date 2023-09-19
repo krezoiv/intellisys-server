@@ -1,3 +1,4 @@
 export * from './connection';
-export {employees_queries} from './querys/employeesQuerys'
+export {employees_querie} from './querys/employeesQuerys';
+export {users_queries} from './querys/usersQuerys';
 

@@ -21,7 +21,7 @@ export const getEmployees = async (req, res) => {
 };
 
 /**
- ** controlador que crear un nuevo empleado, usa procedimiento alacenado
+ * controlador que crear un nuevo empleado, usa procedimiento alacenado
  */
 export const creatNewEmployee = async (req, res) => {
   //*mandaa llamar al clase modelo EmployyeModel que serviran para el request body
@@ -61,31 +61,27 @@ export const creatNewEmployee = async (req, res) => {
  */
 export const getEmployeesById = async (req, res) => {
   try {
-    //* Obtén el código del empleado directamente del cuerpo de la solicitud (req.body)
+    // Obtén el código del empleado directamente del cuerpo de la solicitud (req.body)
     const { codigo } = req.body;
-
-    //* Obtiene los mapeos de campos SQL para la consulta
+    // Obtiene los mapeos de campos SQL para la consulta
     const employeesMapping = EmployeesFieldMapping.getMappings();
-
-    //* Obtiene una conexión del pool de conexiones a la base de datos
+    // Obtiene una conexión del pool de conexiones a la base de datos
     const pool = await getConnection();
-
-    //* Ejecuta la consulta SQL con el código del empleado como parámetro
+    // Ejecuta la consulta SQL con el código del empleado como parámetro
     const result = await pool
       .request()
       .input("codigo", employeesMapping.codigo, codigo)
       .query(employees_queries.getEmployeeById);
-
-    //* Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
+    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
     if (result.recordset.length > 0) {
-      //* Responde con los detalles del empleado en formato JSON
+      // Responde con los detalles del empleado en formato JSON
       res.json(result.recordset);
     } else {
-      //* Si no se encontró ningún empleado con el código dado, responde con un código de estado 404
+      // Si no se encontró ningún empleado con el código dado, responde con un código de estado 404
       res.status(404).send("Empleado no encontrado");
     }
   } catch (error) {
-    //* Maneja errores, registra el error en la consola y responde con un código de estado 500 y el mensaje de error
+    // Maneja errores, registra el error en la consola y responde con un código de estado 500 y el mensaje de error
     console.error("Error al obtener empleado por código:", error);
     res.status(500).send("Error al obtener empleado por código: " + error.message);
   }

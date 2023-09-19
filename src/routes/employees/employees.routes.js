@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { creatNewEmployee, getEmployees, getEmployeesById } from "../../controllers/employees/employees.controllers";
-
+import {authenticateToken} from "../../middlewares/authenticateToken"
 // Crea un enrutador Express
 const router = Router();
 
@@ -8,7 +8,7 @@ const router = Router();
  * @route GET /api/employees/employees
  * @description Ruta para obtener la lista de empleados.
  */
-router.get('/employees', getEmployees);
+router.get('/employees', authenticateToken, getEmployees);
 
 /**
  * @route POST /api/employees/employees
