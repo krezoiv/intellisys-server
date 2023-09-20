@@ -2,6 +2,7 @@
 
 class UsuariosModel {
     constructor({
+      idUsuario,
       codigo,
       usuario,
       password,
@@ -10,6 +11,7 @@ class UsuariosModel {
     }) {
       // Asigna las propiedades directamente desde los argumentos usando desestructuración
       Object.assign(this, {
+        idUsuario,
         codigo,
         usuario,
         password,
