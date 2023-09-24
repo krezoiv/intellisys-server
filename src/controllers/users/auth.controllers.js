@@ -6,6 +6,8 @@ require("dotenv").config(); // Carga las variables de entorno desde el archivo .
 const usersMapping = UsersMapping.getMappings();
 const bcrypt = require("bcryptjs");
 import jwt from "jsonwebtoken"; // Importa la librería jsonwebtoken
+import { response } from "express";
+import { generateJWT } from "../../helpers/jwt";
 
 /**
  * @function login
@@ -64,5 +66,36 @@ export const login = async (req, res) => {
 
     // Responde con un código de estado 500 (Error interno del servidor)
     res.status(500).json({ error: "Error en el inicio de sesión" });
+  }
+};
+
+/**
+ * Renueva un token de autenticación para un usuario autenticado.
+ * @param {Request} req - Objeto de solicitud HTTP que debe contener la información del usuario autenticado en `req.usuario`.
+ * @param {Response} res - Objeto de respuesta HTTP que se utilizará para enviar la respuesta JSON con el nuevo token.
+ * @returns {Promise<void>} - Una promesa que resuelve cuando se completa la renovación del token.
+ */
+export const renewToken = async (req, res = response) => {
+  try {
+    // Obtener el usuario autenticado desde la solicitud (req.usuario)
+    const usuario = req.usuario;
+
+    // Generar un nuevo token JWT para el usuario
+    const token = await generateJWT(usuario);
+
+    // Enviar una respuesta JSON con el nuevo token
+    res.json({
+      ok: true,
+      token
+    });
+  } catch (error) {
+    // Manejar errores de generación de token
+    console.error('Error al renovar el token:', error);
+
+    // Responder con un estado de error y un mensaje de error
+    res.status(500).json({
+      ok: false,
+      message: 'Error al renovar el token'
+    });
   }
 };

@@ -1,5 +1,6 @@
 import express from "express";
 import config from './config'
+import cors from "cors"; // Agrega esta línea
 const app = express();
 
 import employeesRoute from './routes/employees/employees.routes';
@@ -10,6 +11,7 @@ import authRoute from './routes/users/auth.routes'
 app.set('port', config.port);
 
 //middlewares
+app.use(cors()); // Agrega esta línea para habilitar CORS
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
