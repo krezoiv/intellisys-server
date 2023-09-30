@@ -9,6 +9,8 @@ const bcrypt = require ('bcryptjs');
 const jwt = require("jsonwebtoken"); //se requiere el servicio de jsonwebtoken
 
 
+
+ 
 export const newUser = async (req, res = response) => {
   try {
     const usuarioModel = new UsuariosModel(req.body);
@@ -42,74 +44,7 @@ export const newUser = async (req, res = response) => {
     console.error(error);
     res.status(500).json({ ok: false, msg: 'Error Inesperado, hable con el administrador' });
   }
-}
- /*
-export const newUser = async (req, res = response) => {
-  try {
-    // Accede al token del encabezado de la solicitud
-    const token = req.header('Authorization');
-
-    // Verifica si se proporcionó un token
-    if (!token) {
-      return res.status(401).json({ ok: false, msg: 'Token no proporcionado' });
-    }
-
-    // El valor del encabezado "Authorization" debe tener el formato "Bearer [token]"
-    const tokenParts = token.split(' ');
-    if (tokenParts.length !== 2 || tokenParts[0] !== 'Bearer') {
-      return res.status(401).json({ ok: false, msg: 'Token inválido' });
-    }
-
-    // El token JWT se encuentra en tokenParts[1]
-    const jwtToken = tokenParts[1];
-
-    // Decodifica el token JWT para obtener información sobre el usuario
-    const decodedToken = jwt.verify(jwtToken, process.env.SECRET_KEY);
-
-    // Asegúrate de que el token contenga la información del usuario que crea el nuevo usuario
-    if (!decodedToken || !decodedToken.usuario) {
-      return res.status(401).json({ ok: false, msg: 'Token inválido o datos de usuario ausentes' });
-    }
-
-    // El usuario que crea el nuevo usuario se encuentra en decodedToken.usuario
-    const creadorUsuario = decodedToken.usuario;
-
-    // Resto de tu código
-    const usuarioModel = new UsuariosModel(req.body);
-
-    // Genera un hash seguro para la contraseña
-    const saltRounds = 10;
-    const hashedPassword = bcrypt.hashSync(usuarioModel.password, saltRounds);
-
-    // Actualiza la contraseña en el modelo con el hash
-    usuarioModel.password = hashedPassword;
-
-    const pool = await getConnection();
-    const request = pool.request();
-
-    const usuarioMapping = UsersFieldMapping.getMappings();
-
-    for (const fieldName in usuarioMapping) {
-      // El recorrido rellena los campos que se solicitan
-      request.input(
-        fieldName,
-        usuarioMapping[fieldName],
-        usuarioModel[fieldName]
-      );
-    }
-
-    // Agrega el campo "creadorUsuario" al modelo antes de guardarlo en la base de datos
-    usuarioModel.creadorUsuario = creadorUsuario;
-
-    await request.query(users_queries.newUser);
-    const token1 = await generateJWT();
-
-    res.json(usuarioModel + token1);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, msg: 'Error Inesperado, hable con el administrador' });
-  }
-};*/
+};
 
 
 

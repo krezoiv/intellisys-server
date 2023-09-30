@@ -1,32 +1,41 @@
-
 class EmployeeModel {
-  
-    constructor({
-      codigo,
-      primerNombre,
-      segundoNombre,
-      primerApellido,
-      segundoApellido,
-      fechaAlta,
-      fechaBaja,
-      idSede,
-      idTipoEmpleado,
+  constructor({
+    idEmployee,
+    code,
+    firstName,
+    secondName,
+    firstLastName,
+    secondLastName,
+    hireDate,
+    hireEndDate,
+    idCampus,
+    idEmployeeType,
+    idStatus,
+    idWorkPosition,
+    idMunicipality,
+    addressReference,
+    BACaccount,
+    BAMaccount,
+  }) {
+    Object.assign(this, {
+      idEmployee,
+      code,
+      firstName,
+      secondName,
+      firstLastName,
+      secondLastName,
+      hireDate,
+      hireEndDate,
+      idCampus,
+      idEmployeeType,
       idStatus,
-      idCargo,
-    }) {
-      this.codigo = codigo;
-      this.primerNombre = primerNombre;
-      this.segundoNombre = segundoNombre;
-      this.primerApellido = primerApellido;
-      this.segundoApellido = segundoApellido;
-      this.fechaAlta = fechaAlta;
-      this.fechaBaja = fechaBaja;
-      this.idSede = idSede;
-      this.idTipoEmpleado = idTipoEmpleado;
-      this.idStatus = idStatus;
-      this.idCargo = idCargo;
-    }
+      idWorkPosition,
+      idMunicipality,
+      addressReference,
+      BACaccount,
+      BAMaccount,
+    });
   }
-  
-  export default EmployeeModel;
-  
+}
+
+export default EmployeeModel;

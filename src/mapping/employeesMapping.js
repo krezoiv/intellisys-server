@@ -12,17 +12,22 @@ class EmployeesFieldMappings {
   constructor() {
     //* Define los mapeos de campos SQL para varios campos de la tabla de empleados
     this.fieldMappings = {
-      codigo: sql.VarChar(15),
-      primerNombre: sql.VarChar,
-      segundoNombre: sql.VarChar,
-      primerApellido: sql.VarChar,
-      segundoApellido: sql.VarChar,
-      fechaAlta: sql.Date,
-      fechaBaja: sql.Date,
-      idSede: sql.VarChar,
-      idTipoEmpleado: sql.Int,
+      
+      code : sql.VarChar(15),
+      firstName : sql.VarChar(50),
+      secondName : sql.VarChar(50),
+      firstLastName : sql.VarChar(50),
+      secondLastName: sql.VarChar(50),
+      hireDate : sql.Date,
+      hireEndDate : sql.Date,
+      idCampus : sql.VarChar(3),
+      idEmployeeType   : sql.Int,
       idStatus: sql.Int,
-      idCargo: sql.Int,
+      idWorkPosition : sql.Int,
+      idMunicipality : sql.Int,
+      addressReference : sql.VarChar(200),
+      BACaccount : sql.VarChar(50),
+      BAMaccount : sql.VarChar(50),
     };
   }
 

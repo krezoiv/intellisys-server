@@ -18,7 +18,7 @@ import { generateJWT } from "../../helpers/jwt";
 export const login = async (req, res) => {
   try {
     // Obtiene los datos del usuario (nombre de usuario y contraseña) desde la solicitud
-    const { usuario, password } = req.body;
+    const { userName, password } = req.body;
 
     // Obtiene una conexión a la base de datos
     const pool = await getConnection();
@@ -26,8 +26,8 @@ export const login = async (req, res) => {
     // Realiza una consulta SQL para obtener el hash de la contraseña almacenada en la base de datos
     const resultLogin = await pool
       .request()
-      .input("usuario", usuario)
-      .query("SELECT password FROM usuario WHERE usuario = @usuario");
+      .input("userName", userName)
+      .query("SELECT password FROM users WHERE userName = @userName");
 
     // Verifica si se encontró un usuario válido en la consulta
     if (resultLogin.recordset && resultLogin.recordset.length > 0) {
@@ -39,13 +39,13 @@ export const login = async (req, res) => {
         // La contraseña es válida
 
         // Genera un token JWT con los datos del usuario (puedes personalizar los datos incluidos)
-        const token = jwt.sign({ usuario: usuario }, process.env.SECRET_KEY, {
+        const token = jwt.sign({ userName: userName }, process.env.SECRET_KEY, {
           expiresIn: "1h",
         });
 
         // Responde con el token JWT y un mensaje de inicio de sesión exitoso
         res.json({
-          usuario,
+          userName,
           message: "Inicio de sesión exitoso",
           token: token,
         });

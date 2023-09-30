@@ -4,12 +4,13 @@ class UsersFieldMapping {
 
     constructor(){
         this.fieldMappings = {
-            idUsuario: sql.Int,
-            codigo: sql.VarChar(15),
-            usuario: sql.VarChar(10),
+            
+            idUser: sql.Int,
+            userName: sql.VarChar(20),
             password: sql.VarChar(100),
-            idRol: sql.Int,
+            idRole: sql.Int,
             idStatus: sql.Int,
+            idEmployee: sql.Int,
         };
     };
 

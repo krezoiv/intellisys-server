@@ -1,6 +1,7 @@
-import { getConnection, sql, employees_queries } from "../../database";
+import { getConnection, sql} from "../../database";
 import EmployeeModel from "../../models/employees.model";
 import EmployeesFieldMapping from "../../mapping/employeesMapping";
+import { employees_queries } from "../../database/querys/employeesQuerys";
 
 /**
  * @function getEmployees
@@ -11,7 +12,7 @@ export const getEmployees = async (req, res) => {
     //* Obtiene una conexión del pool de conexiones a la base de datos
     const pool = await getConnection();
     //* Ejecuta una consulta SQL para obtener la lista de empleados
-    const result = await pool.request().query(employees_queries.getEmployees);
+    const result = await pool.request().query(employees_queries.getEmployeesDetails);
     //* Responde con la lista de empleados en formato JSON
     res.json(result.recordset);
   } catch (error) {
@@ -62,7 +63,7 @@ export const creatNewEmployee = async (req, res) => {
 export const getEmployeesById = async (req, res) => {
   try {
     // Obtén el código del empleado directamente del cuerpo de la solicitud (req.body)
-    const { codigo } = req.body;
+    const { code } = req.body;
     // Obtiene los mapeos de campos SQL para la consulta
     const employeesMapping = EmployeesFieldMapping.getMappings();
     // Obtiene una conexión del pool de conexiones a la base de datos
@@ -70,7 +71,7 @@ export const getEmployeesById = async (req, res) => {
     // Ejecuta la consulta SQL con el código del empleado como parámetro
     const result = await pool
       .request()
-      .input("codigo", employeesMapping.codigo, codigo)
+      .input("code", employeesMapping.code, code)
       .query(employees_queries.getEmployeeById);
     // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
     if (result.recordset.length > 0) {
@@ -86,3 +87,53 @@ export const getEmployeesById = async (req, res) => {
     res.status(500).send("Error al obtener empleado por código: " + error.message);
   }
 };
+
+
+/**
+ * Actualiza un empleado en la base de datos.
+ *
+ * @param {Object} req - Objeto de solicitud HTTP que contiene los datos del empleado a actualizar.
+ * @param {Object} res - Objeto de respuesta HTTP utilizado para enviar una respuesta al cliente.
+ */
+export const updateEmployee = async (req, res) => {
+  try {
+    // Obtener el código del empleado de la solicitud
+    const { code } = req.body;
+
+    // Establecer una conexión a la base de datos utilizando la función getConnection
+    const pool = await getConnection();
+    const request = pool.request();
+
+    // Crear una instancia de EmployeeModel para mapear los campos de la solicitud
+    const employeeModel = new EmployeeModel(req.body);
+
+    // Obtener el mapeo de campos a parámetros desde EmployeesFieldMapping
+    const employeesMapping = EmployeesFieldMapping.getMappings();
+
+    // Recorrer y mapear los campos de la solicitud a los parámetros del procedimiento almacenado
+    for (const fieldName in employeesMapping) {
+      // Verificar si el campo existe en el modelo antes de mapearlo
+      if (employeeModel.hasOwnProperty(fieldName)) {
+        request.input(
+          fieldName,
+          employeesMapping[fieldName],
+          employeeModel[fieldName]
+        );
+      }
+    }
+
+    // Ejecutar el procedimiento almacenado sp_UpdateEmployee utilizando la consulta definida en employees_queries
+    await request.query(employees_queries.updateEmployee);
+
+    // Enviar una respuesta exitosa al cliente
+    res.status(200).json({ message: 'Empleado actualizado exitosamente' });
+  } catch (error) {
+    // Capturar y manejar cualquier error que ocurra durante la ejecución
+    console.error('Error al actualizar empleado:', error);
+
+    // Enviar una respuesta de error al cliente
+    res.status(500).json({ message: 'Error al actualizar empleado' });
+  }
+};
+
+
