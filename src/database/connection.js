@@ -7,10 +7,11 @@ dotenv.config();
  
 // Configuración de la conexión a la base de datos
 const dbSettings = {
-  user: process.env.DB_USER,         // Nombre de usuario de la base de datos
-  password: process.env.DB_PASSWORD, // Contraseña de la base de datos
-  server: process.env.DB_SERVER,     // Servidor de la base de datos
-  database: process.env.DB_DATABASE, // Nombre de la base de datos
+  user: "sa",// Nombre de usuario de la base de datos
+  password: "krezoiv@1984", // Contraseña de la base de datos
+  server: "192.168.1.63",     // Servidor de la base de datos
+  database: "IntelliSys_DB", 
+  port: 1433,// Nombre de la base de datos
   options: {
     encrypt: true,                  // Habilitar el cifrado de la conexión
     trustServerCertificate: true,    // Confiar en el certificado del servidor (seguro para desarrollo)
