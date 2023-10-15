@@ -5,6 +5,7 @@ const app = express();
 
 import employeesRoute from './routes/employees/employees.routes';
 import usersRoute from './routes/users/users.routes';
+import campusRoute from './routes/campus/campus.routes'
 import authRoute from './routes/users/auth.routes'
 
 //settings
@@ -19,4 +20,5 @@ app.use(express.urlencoded({ extended: false }));
 app.use(employeesRoute);
 app.use(usersRoute);
 app.use(authRoute);
+app.use(campusRoute);
 export default app;

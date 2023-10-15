@@ -9,33 +9,36 @@ import { employees_queries } from "../../database/querys/employeesQuerys";
  */
 export const getEmployees = async (req, res) => {
   try {
-    //* Obtiene una conexión del pool de conexiones a la base de datos
+    // Obtiene una conexión del pool de conexiones a la base de datos
     const pool = await getConnection();
-    //* Ejecuta una consulta SQL para obtener la lista de empleados
+    // Ejecuta una consulta SQL para obtener la lista de empleados
     const result = await pool.request().query(employees_queries.getEmployeesDetails);
-    //* Responde con la lista de empleados en formato JSON
+    // Responde con la lista de empleados en formato JSON
     res.json(result.recordset);
   } catch (error) {
-    //* Maneja los errores y responde con un código de estado 500 y el mensaje de error
+    // Maneja los errores y responde con un código de estado 500 y el mensaje de error
     res.status(500).send("Error al obtener empleados: " + error.message);
   }
 };
 
 /**
- * controlador que crear un nuevo empleado, usa procedimiento alacenado
+ * Controlador para crear un nuevo empleado.
+ * @param {Object} req - El objeto de solicitud HTTP que contiene los datos del empleado.
+ * @param {Object} res - El objeto de respuesta HTTP para enviar una respuesta al cliente.
  */
 export const creatNewEmployee = async (req, res) => {
-  //*mandaa llamar al clase modelo EmployyeModel que serviran para el request body
+  // Crear una instancia de la clase modelo EmployeeModel utilizando los datos del cuerpo de la solicitud.
   const employeeModel = new EmployeeModel(req.body);
   try {
+    // Establecer una conexión a la base de datos.
     const pool = await getConnection();
     const request = pool.request();
-    //* manda a llmar la clasee Mapping donde se encuetra el tipado de datos de los empleados
+
+    // Obtener un mapeo de campos de empleado.
     const employeesMapping = EmployeesFieldMapping.getMappings();
 
-    //*se declara la variable fieldname para hacer un recorrido del mapping
+    // Recorrer el mapeo y asignar los valores de los campos del modelo de empleado a la solicitud de base de datos.
     for (const fieldName in employeesMapping) {
-      //* el recorrido rellana los campos que se selicitan
       request.input(
         fieldName,
         employeesMapping[fieldName],
@@ -43,16 +46,20 @@ export const creatNewEmployee = async (req, res) => {
       );
     }
 
-    //* el query para insertar los datos a la base de datos , es lllamado el SP desde la clase employeesQuery
+    // Ejecutar una consulta para agregar un nuevo empleado a la base de datos utilizando un Stored Procedure (SP) llamado employees_queries.addNewEmployee.
     await request.query(employees_queries.addNewEmployee);
 
+    // Responder a la solicitud HTTP con los datos del empleado creado.
     res.json(employeeModel);
   } catch (error) {
+    // En caso de error, configurar el estado de respuesta en 500 (Error interno del servidor),
+    // enviar un mensaje de error al cliente y registrar el error en la consola.
     res.status(500);
     res.send(error.message);
     console.log(error);
   }
 };
+
 
 /**
  * @function getEmployeesById
