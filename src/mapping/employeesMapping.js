@@ -10,7 +10,7 @@ class EmployeesFieldMappings {
    * @description Constructor de la clase que inicializa los mapeos de campos SQL.
    */
   constructor() {
-    //* Define los mapeos de campos SQL para varios campos de la tabla de empleados
+    // Define los mapeos de campos SQL para varios campos de la tabla de empleados
     this.fieldMappings = {
       
       code : sql.VarChar(15),
@@ -41,5 +41,5 @@ class EmployeesFieldMappings {
   }
 }
 
-//* Exporta una instancia de la clase EmployeesFieldMappings
+// Exporta una instancia de la clase EmployeesFieldMappings
 export default new EmployeesFieldMappings();
