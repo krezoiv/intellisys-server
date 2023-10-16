@@ -31,3 +31,5 @@ export const employees_queries = {
     updateEmployee: 'EXEC StoredProcedure_UpdateEmployee @code, @firstName, @secondName, @firstLastName, @secondLastName, @hireDate, @hireEndDate, @idCampus, @idEmployeeType, @idWorkPosition, @idMunicipality, @addressReference, @BACaccount, @BAMaccount'
   };
   
+
+
