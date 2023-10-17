@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { geAllCampus } from "../../controllers/campus/campus.controllers";
+import { geAllCampus } from "../../controllers/locations/campus.controllers";
 
 const router = Router();
 

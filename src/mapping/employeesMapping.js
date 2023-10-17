@@ -21,7 +21,6 @@ class EmployeesFieldMappings {
       hireDate : sql.Date,
       hireEndDate : sql.Date,
       idCampus : sql.VarChar(3),
-      idEmployeeType   : sql.Int,
       idStatus: sql.Int,
       idWorkPosition : sql.Int,
       idMunicipality : sql.Int,

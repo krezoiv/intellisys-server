@@ -14,6 +14,7 @@ class WorkPositionFieldMappings {
     this.fieldWorkPositionMappings = {
       idWorkPosition: sql.Int,
       workPosition: sql.VarChar(50),
+      idEmployeeType : sql.Int
     };
   };
   
