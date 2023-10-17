@@ -26,3 +26,21 @@ export const getListWorkPosition = async (req, res) => {
         console.log(error);
     }
 }
+
+
+export const getWorkPositionByEmployeesType = async ( req, res ) => {
+    const idEmployeeType = req.params.idEmployeeType;
+
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().input('idEmployeeType', sql.Int, idEmployeeType)
+        .query(workPosition_queries.getWorkPositionByEmployee);
+
+        res.json(result.recordset);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Error al obtner lista de puestos'
+        });
+    }
+}
