@@ -54,9 +54,7 @@ export const creatNewEmployee = async (req, res) => {
   } catch (error) {
     // En caso de error, configurar el estado de respuesta en 500 (Error interno del servidor),
     // enviar un mensaje de error al cliente y registrar el error en la consola.
-    res.status(500);
-    res.send(error.message);
-    console.log(error);
+    
   }
 };
 

@@ -12,7 +12,7 @@ class WorkPositionFieldMappings {
   constructor() {
      // Define los mapeos de campos SQL para varios campos de la tabla workPosition (cargo)
     this.fieldWorkPositionMappings = {
-      idWorkPosition: sql.Int,
+      idWorkposition: sql.Int,
       workPosition: sql.VarChar(50),
       idEmployeeType : sql.Int
     };

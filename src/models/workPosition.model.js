@@ -9,14 +9,14 @@ class WorkPositionModel {
     // El constructor de la clase WorkPositionModel toma un objeto como argumento
     // que contiene las propiedades proporcionadas dentro del constructror
     constructor({
-        idWorkPosition,
+        idWorkposition,
         workPosition,
         idEmployeeType
     }){
         // Utilizamos Object.assign para asignar las propiedades del objeto argumento
         // a las propiedades de la instancia de la clase WorkPositionModel.
         Object.assign(this,{
-            idWorkPosition,
+            idWorkposition,
             workPosition,
             idEmployeeType,
         });
