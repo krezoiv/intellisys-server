@@ -18,8 +18,16 @@ export const createRole = async (req, res) => {
       request.input(fieldsRole, rolesMapping[fieldsRole], roleModel[fieldsRole]);
     }
 
-    await request.query(roles_queries.createNewRole);
-    res.json(roleModel);
+    // Ejecutar el procedimiento almacenado y capturar el resultado
+    const result = await request.query(roles_queries.createNewRole);
+
+    // Verificar si el procedimiento almacenado generó un mensaje de éxito
+    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+      const successMessage = result.recordset[0].Message;
+      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+    } else {
+      res.json(roleModel); // Enviar el objeto roleModel si no hay mensaje de éxito
+    }
 
   } catch (error) {
     if (error.originalError) {
