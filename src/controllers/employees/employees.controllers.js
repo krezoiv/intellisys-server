@@ -2,6 +2,7 @@ import { getConnection, sql} from "../../database";
 import EmployeeModel from "../../models/employees.model";
 import EmployeesFieldMapping from "../../mapping/employeesMapping";
 import { employees_queries } from "../../database/querys/employeesQuerys";
+import employeesMapping from "../../mapping/employeesMapping";
 
 /**
  * @function getEmployees
@@ -141,4 +142,69 @@ export const updateEmployee = async (req, res) => {
   }
 };
 
+/**
+ * @function searchEmployee
+ * @description Busca empleados en la base de datos que coincidan con un término de búsqueda y responde con los resultados en formato JSON.
+ * @param {Object} req - Objeto de solicitud HTTP que debe contener el término de búsqueda en el cuerpo (req.body).
+ * @param {Object} res - Objeto de respuesta HTTP.
+ */
+
+export const searchEmployee = async (req, res) => {
+  try {
+    // Obtén el término de búsqueda directamente del cuerpo de la solicitud (req.body)
+    const { searchTerm } = req.body;
+    // Obtiene una conexión del pool de conexiones a la base de datos
+    const pool = await getConnection();
+    // Ejecuta la consulta SQL con el término de búsqueda como parámetro
+    const result = await pool
+      .request()
+      .input("searchTerm", sql.NVarChar(100), searchTerm)
+      .query(employees_queries.searchEmployee);
+    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
+    res.json(result.recordset);
+  } catch (error) {
+    if (error.originalError){
+      const errorMessage = error.originalError.message || "Error en la búsqueda de empleado";
+      console.error(error);
+      res.status(500).json({ error : errorMessage });
+    } else {
+      const errorMessage = error.message || "Error en la búsqueda de empleado";
+      console.error("Error en la búsqueda", error);
+      res.status(500).json({
+        error: errorMessage
+      })
+    }
+  }
+};
+
+
+
+
+
+/*export const searchEmployee = async (req, res) => {
+  try {
+    // Obtén el término de búsqueda directamente del cuerpo de la solicitud (req.body)
+    const { searchTerm } = req.body;
+    // Obtiene una conexión del pool de conexiones a la base de datos
+    const pool = await getConnection();
+    // Ejecuta la consulta SQL con el término de búsqueda como parámetro
+    const result = await pool
+      .request()
+      .input("searchTerm", sql.NVarChar(100), searchTerm)
+      .query(employees_queries.searchEmployee);
+    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
+    if (result.recordset.length > 0) {
+      // Responde con los resultados de la búsqueda en formato JSON
+      res.json(result.recordset);
+    } else {
+      // Si no se encontraron empleados que coincidan con el término de búsqueda, responde con un mensaje adecuado.
+      res.status(404).send("No se encontraron empleados con el término de búsqueda proporcionado.");
+    }
+  } catch (error) {
+    // Maneja errores, registra el error en la consola y responde con un código de estado 500 y el mensaje de error
+    console.error("Error al buscar empleados:", error);
+    res.status(500).send("Error al buscar empleados: " + error.message);
+  }
+};
+*/
 

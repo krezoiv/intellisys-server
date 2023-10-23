@@ -3,14 +3,82 @@ import { getConnection, users_queries } from "../../database";
 import UsersFieldMapping from "../../mapping/usersMapping";
 import UsuariosModel from "../../models/users.model";
 import { generateJWT } from "../../helpers/jwt";
-require('dotenv').config(); // Carga las variables de entorno desde el archivo .env
+require("dotenv").config(); // Carga las variables de entorno desde el archivo .env
 
-const bcrypt = require ('bcryptjs');
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); //se requiere el servicio de jsonwebtoken
 
+/**
+ * Crea un nuevo usuario en la base de datos.
+ * @param req - La solicitud HTTP que contiene los datos del nuevo usuario.
+ * @param res - La respuesta HTTP que se enviará al cliente.
+ */
+export const newUser = async (req, res) => {
+  // Crear una instancia del modelo de usuario con los datos de la solicitud.
+  const userModel = new UsuariosModel(req.body);
+
+  try {
+    // Generar un hash de la contraseña del usuario con bcrypt.
+    const saltRounds = 10;
+    const hashedPassword = bcrypt.hashSync(userModel.password, saltRounds);
+
+    // Actualizar el campo 'password' del modelo de usuario con el hash.
+    userModel.password = hashedPassword;
+
+    // Establecer una conexión con la base de datos.
+    const pool = await getConnection();
+    const request = pool.request();
+
+    // Obtener el mapeo de campos de usuario.
+    const usersMapping = UsersFieldMapping.getMappings();
+
+    // Agregar cada campo de usuario como parámetro en la solicitud SQL.
+    for (const fieldsUser in usersMapping) {
+      request.input(
+        fieldsUser,
+        usersMapping[fieldsUser],
+        userModel[fieldsUser]
+      );
+    }
+
+    // Ejecutar la consulta SQL para crear el nuevo usuario en la base de datos.
+    const result = await request.query(users_queries.newUser);
+
+    if (
+      result &&
+      result.recordset &&
+      result.recordset[0] &&
+      result.recordset[0].message
+    ) {
+      // Si la consulta SQL devuelve un mensaje de éxito, responder con ese mensaje.
+      const successMessage = result.recordset[0].message;
+      res.json({
+        message: successMessage,
+      });
+    } else {
+      // Si no hay un mensaje de éxito, responder con los datos del usuario creado.
+      res.json(userModel);
+    }
+  } catch (error) {
+    if (error.originalError) {
+      // Manejar errores con un mensaje personalizado si está disponible.
+      const errorMessage =
+        error.originalError.message || "Error al crear el usuario";
+      console.error("Error al crear el usuario:", error);
+      res.status(500).json({ error: errorMessage });
+    } else {
+      // Manejar errores con un mensaje genérico si no hay un mensaje personalizado.
+      const errorMessage = error.message || "Error al crear el usuario";
+      console.error("Error al crear el usuario:", error);
+      res.status(500).json({
+        error: errorMessage,
+      });
+    }
+  }
+};
 
 
- 
+/*
 export const newUser = async (req, res = response) => {
   try {
     const usuarioModel = new UsuariosModel(req.body);
@@ -45,8 +113,7 @@ export const newUser = async (req, res = response) => {
     res.status(500).json({ ok: false, msg: 'Error Inesperado, hable con el administrador' });
   }
 };
-
-
+*/
 
 /**
  * @function getUsers
@@ -55,20 +122,15 @@ export const newUser = async (req, res = response) => {
  * @param {Object} res - Objeto de respuesta HTTP.
  */
 export const getUsers = async (req, res) => {
+  
   try {
-    // Obtiene una conexión del pool de conexiones a la base de datos
     const pool = await getConnection();
+    const result = await pool.request().query('SELECT * from users');
 
-    // Ejecuta una consulta SQL para obtener la lista de usuarios
-    const result = await pool.request().query(users_queries.getUsers);
+    res.json(result.recordset);
 
-    // Responde con la lista de usuarios en formato JSON
-    res.json({recordset:result.recordset, usuario: req.usuario});
   } catch (error) {
-    // Maneja errores específicos de SQL Server y responde con un código de estado 500 y el mensaje de error
-    console.error("Error al obtener usuarios:", error);
-    res.status(500).send("Error al obtener usuarios: " + error.message);
+    res.status(500).send("Error al obtener lista de usuarios " + error.message);
+    console.error("Error al obtener lista de usuarios " + error.message);
   }
 };
-
-

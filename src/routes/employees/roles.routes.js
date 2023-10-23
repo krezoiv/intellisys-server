@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { createRole } from "../../controllers/employees/role.controllers";
+import { createRole, getRoles } from "../../controllers/employees/role.controllers";
 
 
 const router = Router();
 
-
+router.get('/roles', getRoles);
 router.post('/roles', createRole);
 
 export default router;

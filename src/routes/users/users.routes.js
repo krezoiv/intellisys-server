@@ -4,7 +4,7 @@ import { validateJWT } from "../../middlewares/validateJWT";
 
 const router = Router();
 
-router.get('/users', validateJWT, getUsers);
+router.get('/users', getUsers);
 router.post('/users', newUser);
 //router.post('/singin', singin);
 

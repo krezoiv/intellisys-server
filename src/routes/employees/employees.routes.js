@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { creatNewEmployee, getEmployees, getEmployeesById, updateEmployee } from "../../controllers/employees/employees.controllers";
+import { creatNewEmployee, getEmployees, getEmployeesById, searchEmployee, updateEmployee } from "../../controllers/employees/employees.controllers";
 import {authenticateToken} from "../../middlewares/authenticateToken"
 // Crea un enrutador Express
 const router = Router();
@@ -21,6 +21,9 @@ router.post('/employees', creatNewEmployee);
  * @description Ruta para obtener un empleado por su ID.
  */
 router.post('/employeesById', getEmployeesById);
+
+router.post ('/searchEmployee', searchEmployee);
+
 
 router.put('/employee', updateEmployee);
 

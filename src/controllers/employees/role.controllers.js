@@ -5,6 +5,21 @@ import RolesFieldsMappings from "../../mapping/roleMapping";
 import { roles_queries } from "../../database/querys/rolesQuerys";
 import sql from "mssql";
 
+
+export const getRoles = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const result = await pool.request()
+      .query(roles_queries.getRolesList);
+
+      res.json(result.recordset);
+  } catch (error) {
+    res.status(500).send("Error al obtener lista de rols " + error.message);
+    console.error("Error al obtener lista de rols " + error.message);
+  }
+}
+
+
 export const createRole = async (req, res) => {
   const roleModel = new RoleModel(req.body);
 
@@ -40,7 +55,9 @@ export const createRole = async (req, res) => {
       // Muestra un mensaje de error genérico en caso de otro tipo de error
       const errorMessage = error.message || "Error al crear el rol";
       console.error("Error al crear el rol:", error);
-      res.status(500).json({ error: errorMessage });
+      res.status(500).json({ 
+        error: errorMessage
+       });
     }
   }
 };
