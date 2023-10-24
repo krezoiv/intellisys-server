@@ -34,24 +34,15 @@ export const newUser = async (req, res) => {
 
     // Agregar cada campo de usuario como parámetro en la solicitud SQL.
     for (const fieldsUser in usersMapping) {
-      request.input(
-        fieldsUser,
-        usersMapping[fieldsUser],
-        userModel[fieldsUser]
-      );
+      request.input(fieldsUser, usersMapping[fieldsUser], userModel[fieldsUser] );
     }
 
     // Ejecutar la consulta SQL para crear el nuevo usuario en la base de datos.
     const result = await request.query(users_queries.newUser);
 
-    if (
-      result &&
-      result.recordset &&
-      result.recordset[0] &&
-      result.recordset[0].message
-    ) {
+    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
       // Si la consulta SQL devuelve un mensaje de éxito, responder con ese mensaje.
-      const successMessage = result.recordset[0].message;
+      const successMessage = result.recordset[0].Message;
       res.json({
         message: successMessage,
       });

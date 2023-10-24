@@ -11,6 +11,7 @@ class UsersFieldMapping {
             idRole: sql.Int,
             idStatus: sql.Int,
             idEmployee: sql.Int,
+            userCode: sql.VarChar(15),
         };
     };
 

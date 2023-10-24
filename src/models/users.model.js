@@ -8,6 +8,7 @@ class UsuariosModel {
       idRole,
       idStatus,
       idEmployee,
+      userCode,
     }) {
       // Asigna las propiedades directamente desde los argumentos usando desestructuración
       Object.assign(this, {
@@ -16,7 +17,8 @@ class UsuariosModel {
         password,
         idRole,
         idStatus,
-        idEmployee
+        idEmployee,
+        userCode,
       });
     }
   }

@@ -27,7 +27,7 @@ export const getEmployees = async (req, res) => {
  * @param {Object} req - El objeto de solicitud HTTP que contiene los datos del empleado.
  * @param {Object} res - El objeto de respuesta HTTP para enviar una respuesta al cliente.
  */
-export const creatNewEmployee = async (req, res) => {
+/*export const creatNewEmployee = async (req, res) => {
   // Crear una instancia de la clase modelo EmployeeModel utilizando los datos del cuerpo de la solicitud.
   const employeeModel = new EmployeeModel(req.body);
   try {
@@ -59,6 +59,47 @@ export const creatNewEmployee = async (req, res) => {
   }
 };
 
+*/
+
+export const creatNewEmployee = async (req, res) => {
+  const employeeModel = new EmployeeModel(req.body);
+
+  try {
+    const pool = await getConnection();
+    const request = pool.request();
+
+    const employeeMapping = EmployeesFieldMapping.getMappings();
+    
+    for(const fieldsEmployee in employeeMapping){
+      request.input(fieldsEmployee, employeeMapping[fieldsEmployee], employeeModel[fieldsEmployee])  
+    }
+
+    const result = await request.query(employees_queries.addNewEmployee);
+
+    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+      const successMessage = result.recordset[0].Message;
+      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+    } else {
+      res.json(employeeModel); // Enviar el objeto roleModel si no hay mensaje de éxito
+    }
+
+  } catch (error) {
+    if (error.originalError) {
+      // Si hay un error original, muestra el mensaje personalizado
+      const errorMessage = error.originalError.message || "Error al crear el empleado";
+      console.error("Error al crear el empleado:", error);
+
+      res.status(500).json({ error: errorMessage });
+    } else {
+      // Muestra un mensaje de error genérico en caso de otro tipo de error
+      const errorMessage = error.message || "Error al crear el empleado";
+      console.error("Error al crear el empleado:", error);
+      res.status(500).json({ 
+        error: errorMessage
+       });
+    }
+  }
+}
 
 /**
  * @function getEmployeesById
