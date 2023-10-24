@@ -17,8 +17,8 @@ export const employees_queries = {
     addNewEmployee: 'EXEC StoredProcedure_AddNewEmployee ' +
       '@code, @firstName, @secondName, ' +
       '@firstLastName, @secondLastName, ' +
-      '@hireDate, ' +
-      '@idStatus, @idWorkPosition, @idMunicipality, @addressReference,' +
+      '@hireDate, @idCampus,' +
+      '@idWorkPosition, @idMunicipality, @addressReference,' +
       '@BACaccount, @BAMaccount', 
   
     /**
