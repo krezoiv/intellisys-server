@@ -41,3 +41,17 @@ export const getMunicipalitiesByIdDepartment = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener lista de Municipios' });
     }
 }
+
+export const getMunicipalityById = async (req, res) => {
+    const idMunicipality = req.params.idMunicipality; // Ahora estamos obteniendo el idDepartment desde el cuerpo de la solicitud (req.body).
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().input('idMunicipality', sql.Int, idMunicipality)
+            .query(municipalities_queries.getMunicipalityById);
+        res.json(result.recordset);
+        console.log(result.recordset)
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error al obtener lista de Municipios' });
+    }
+}

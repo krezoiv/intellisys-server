@@ -7,5 +7,6 @@ export const department_queries = {
 
 export const municipalities_queries = {
     getListMunicipalities : 'EXEC StoredProcedure_GetMunicipalities;',
-    getMunicipalitiesListByDepartments : 'EXEC StoredProcedure_GetMunicipalitiesByDepartments @idDepartment;'
+    getMunicipalitiesListByDepartments : 'EXEC StoredProcedure_GetMunicipalitiesByDepartments @idDepartment;',
+    getMunicipalityById: 'EXEC StoredProcedure_SearchMunicipalityById @idMunicipality;'
 }
