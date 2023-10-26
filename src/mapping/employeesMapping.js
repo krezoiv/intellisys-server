@@ -22,7 +22,7 @@ class EmployeesFieldMappings {
       hireEndDate : sql.Date,
       idCampus : sql.VarChar(3),
       idStatus: sql.Int,
-      idWorkPosition : sql.Int,
+      idWorkposition : sql.Int,
       idMunicipality : sql.Int,
       addressReference : sql.VarChar(200),
       BACaccount : sql.VarChar(50),

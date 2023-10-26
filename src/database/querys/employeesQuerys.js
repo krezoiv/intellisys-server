@@ -18,7 +18,7 @@ export const employees_queries = {
       '@code, @firstName, @secondName, ' +
       '@firstLastName, @secondLastName, ' +
       '@hireDate, @idCampus,' +
-      '@idWorkPosition, @idMunicipality, @addressReference,' +
+      '@idWorkposition, @idMunicipality, @addressReference,' +
       '@BACaccount, @BAMaccount', 
   
     /**
@@ -37,7 +37,7 @@ export const employees_queries = {
       '@secondLastName, ' +
       '@hireDate, ' +
       '@idCampus, ' +
-      '@idWorkPosition, ' +
+      '@idWorkposition, ' +
       '@idMunicipality, ' +
       '@addressReference, ' +
       '@BACaccount, ' +

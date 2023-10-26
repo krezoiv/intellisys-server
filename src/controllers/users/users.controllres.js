@@ -71,6 +71,7 @@ const jwt = require("jsonwebtoken"); //se requiere el servicio de jsonwebtoken
 
 
 export const newUser = async (req, res) => {
+  
   const userModel = new UsuariosModel(req.body);
   const idEmployee = req.body.idEmployee; // Asumiendo que tienes un campo idEmployee en la solicitud
 
@@ -86,8 +87,8 @@ export const newUser = async (req, res) => {
       const firstName = employeeResult.recordset[0].firstName;
       const firstLastName = employeeResult.recordset[0].firstLastName;
 
-      // Construir el valor de userName
-      const userName = `${firstName.charAt(0)}${firstLastName}`;
+      // Construir el valor de userName en mayúsculas
+      const userName = `${firstName.charAt(0)}${firstLastName}`.toUpperCase();
 
       // Actualizar el campo 'userName' en el objeto userModel
       userModel.userName = userName;

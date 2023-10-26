@@ -69,7 +69,17 @@ export const getEmployees = async (req, res) => {
 */
 
 export const creatNewEmployee = async (req, res) => {
-  const employeeModel = new EmployeeModel(req.body);
+  // Capitaliza la primera letra de cada palabra en los campos del objeto req.body
+  const capitalizedBody = {};
+  for (const key in req.body) {
+    if (typeof req.body[key] === 'string') {
+      capitalizedBody[key] = req.body[key].replace(/\b\w/g, (match) => match.toUpperCase());
+    } else {
+      capitalizedBody[key] = req.body[key];
+    }
+  }
+
+  const employeeModel = new EmployeeModel(capitalizedBody);
 
   try {
     const pool = await getConnection();
@@ -86,7 +96,7 @@ export const creatNewEmployee = async (req, res) => {
     ).toUpperCase();
 
     // Genera un número aleatorio del 0 al 9
-    const randomNumber = Math.floor(Math.random() * 100);
+    const randomNumber = Math.floor(Math.random() * 10); // Corregido: 10 en lugar de 100
 
     // Combina el nombre de usuario y el número aleatorio
     const code = `${username}${randomNumber}`;
