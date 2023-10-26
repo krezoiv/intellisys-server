@@ -29,7 +29,19 @@ export const employees_queries = {
     getEmployeeById: 'EXEC StoredProcedure_SearchEmployeeByCode @code',
     searchEmployee: 'EXEC StoredProcedure_SearchEmployee @searchTerm',
     
-    updateEmployee: 'EXEC StoredProcedure_UpdateEmployee @code, @firstName, @secondName, @firstLastName, @secondLastName, @hireDate, @hireEndDate, @idCampus, @idEmployeeType, @idWorkPosition, @idMunicipality, @addressReference, @BACaccount, @BAMaccount'
+    updateEmployee: 'EXEC StoredProcedure_UpdateEmployee ' +
+      '@idEmployee, ' +
+      '@firstName, ' +
+      '@secondName, ' +
+      '@firstLastName, ' +
+      '@secondLastName, ' +
+      '@hireDate, ' +
+      '@idCampus, ' +
+      '@idWorkPosition, ' +
+      '@idMunicipality, ' +
+      '@addressReference, ' +
+      '@BACaccount, ' +
+      '@BAMaccount'
  
  
   };

@@ -13,7 +13,7 @@ const jwt = require("jsonwebtoken"); //se requiere el servicio de jsonwebtoken
  * @param req - La solicitud HTTP que contiene los datos del nuevo usuario.
  * @param res - La respuesta HTTP que se enviará al cliente.
  */
-export const newUser = async (req, res) => {
+/*export const newUser = async (req, res) => {
   // Crear una instancia del modelo de usuario con los datos de la solicitud.
   const userModel = new UsuariosModel(req.body);
 
@@ -67,44 +67,67 @@ export const newUser = async (req, res) => {
     }
   }
 };
+*/
 
 
-/*
-export const newUser = async (req, res = response) => {
+export const newUser = async (req, res) => {
+  const userModel = new UsuariosModel(req.body);
+  const idEmployee = req.body.idEmployee; // Asumiendo que tienes un campo idEmployee en la solicitud
+
   try {
-    const usuarioModel = new UsuariosModel(req.body);
-
-    // Genera un hash seguro para la contraseña
-    const saltRounds = 10;
-    const hashedPassword = bcrypt.hashSync(usuarioModel.password, saltRounds);
-
-    // Actualiza la contraseña en el modelo con el hash
-    usuarioModel.password = hashedPassword;
-
+    // Obtener firstName y firstLastName de la base de datos
     const pool = await getConnection();
     const request = pool.request();
+    request.input('idEmployee', idEmployee);
+    const employeeQuery = 'SELECT firstName, firstLastName FROM employee WHERE idEmployee = @idEmployee';
+    const employeeResult = await request.query(employeeQuery);
 
-    const usuarioMapping = UsersFieldMapping.getMappings();
+    if (employeeResult.recordset.length > 0) {
+      const firstName = employeeResult.recordset[0].firstName;
+      const firstLastName = employeeResult.recordset[0].firstLastName;
 
-    for (const fieldName in usuarioMapping) {
-      // El recorrido rellena los campos que se solicitan
-      request.input(
-        fieldName,
-        usuarioMapping[fieldName],
-        usuarioModel[fieldName]
-      );
+      // Construir el valor de userName
+      const userName = `${firstName.charAt(0)}${firstLastName}`;
+
+      // Actualizar el campo 'userName' en el objeto userModel
+      userModel.userName = userName;
+
+      // Generar un hash de la contraseña del usuario con bcrypt.
+      const saltRounds = 10;
+      const hashedPassword = bcrypt.hashSync(userModel.password, saltRounds);
+
+      // Actualizar el campo 'password' del modelo de usuario con el hash.
+      userModel.password = hashedPassword;
+
+      // Continuar con el proceso de inserción del usuario en la base de datos
+      const usersMapping = UsersFieldMapping.getMappings();
+      const pool = await getConnection();
+      const request = pool.request();
+
+      for (const fieldsUser in usersMapping) {
+        request.input(fieldsUser, usersMapping[fieldsUser], userModel[fieldsUser]);
+      }
+
+      const result = await request.query(users_queries.newUser);
+
+      if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+        const successMessage = result.recordset[0].Message;
+        res.json({
+          message: successMessage,
+        });
+      } else {
+        res.json(userModel);
+      }
+    } else {
+      res.status(404).json({ error: 'Empleado no encontrado' });
     }
-
-    await request.query(users_queries.newUser);
-    
-
-    res.json(usuarioModel);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false, msg: 'Error Inesperado, hable con el administrador' });
+    // Manejo de errores
+    console.error("Error al crear el usuario:", error);
+    res.status(500).json({ error: error.message || "Error al crear el usuario" });
   }
 };
-*/
+
 
 /**
  * @function getUsers

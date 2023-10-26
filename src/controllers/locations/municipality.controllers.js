@@ -49,7 +49,7 @@ export const getMunicipalityById = async (req, res) => {
         const result = await pool.request().input('idMunicipality', sql.Int, idMunicipality)
             .query(municipalities_queries.getMunicipalityById);
         res.json(result.recordset);
-        console.log(result.recordset)
+       
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error al obtener lista de Municipios' });

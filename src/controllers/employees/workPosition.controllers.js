@@ -44,3 +44,18 @@ export const getWorkPositionByEmployeesType = async ( req, res ) => {
         });
     }
 }
+
+export const getWorkPositionById = async (req, res) => {
+    const idWorkposition = req.params.idWorkposition;
+
+    try {
+        const pool = await getConnection();
+        const result = await pool.request().input('idWorkposition', sql.Int, idWorkposition)
+            .query(workPosition_queries.getWorkPositionById);
+
+            res.json(result.recordset);
+    } catch (error) {
+        console.error(err);
+        res.status(500).json({ message: 'Error al obtener lista de puestos de trabajo' });
+    }
+}

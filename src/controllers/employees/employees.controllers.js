@@ -28,40 +28,6 @@ export const getEmployees = async (req, res) => {
  * @param {Object} res - El objeto de respuesta HTTP para enviar una respuesta al cliente.
  */
 /*export const creatNewEmployee = async (req, res) => {
-  // Crear una instancia de la clase modelo EmployeeModel utilizando los datos del cuerpo de la solicitud.
-  const employeeModel = new EmployeeModel(req.body);
-  try {
-    // Establecer una conexión a la base de datos.
-    const pool = await getConnection();
-    const request = pool.request();
-
-    // Obtener un mapeo de campos de empleado.
-    const employeesMapping = EmployeesFieldMapping.getMappings();
-
-    // Recorrer el mapeo y asignar los valores de los campos del modelo de empleado a la solicitud de base de datos.
-    for (const fieldName in employeesMapping) {
-      request.input(
-        fieldName,
-        employeesMapping[fieldName],
-        employeeModel[fieldName]
-      );
-    }
-
-    // Ejecutar una consulta para agregar un nuevo empleado a la base de datos utilizando un Stored Procedure (SP) llamado employees_queries.addNewEmployee.
-    await request.query(employees_queries.addNewEmployee);
-
-    // Responder a la solicitud HTTP con los datos del empleado creado.
-    res.json(employeeModel);
-  } catch (error) {
-    // En caso de error, configurar el estado de respuesta en 500 (Error interno del servidor),
-    // enviar un mensaje de error al cliente y registrar el error en la consola.
-    
-  }
-};
-
-*/
-
-export const creatNewEmployee = async (req, res) => {
   const employeeModel = new EmployeeModel(req.body);
 
   try {
@@ -97,6 +63,68 @@ export const creatNewEmployee = async (req, res) => {
       res.status(500).json({ 
         error: errorMessage
        });
+    }
+  }
+}
+*/
+
+export const creatNewEmployee = async (req, res) => {
+  const employeeModel = new EmployeeModel(req.body);
+
+  try {
+    const pool = await getConnection();
+    const request = pool.request();
+
+    const employeeMapping = EmployeesFieldMapping.getMappings();
+
+    // Genera un nombre de usuario utilizando las primeras letras del nombre y apellidos
+    const username = (
+      (employeeModel.firstName ? employeeModel.firstName[0] : "") +
+      (employeeModel.secondName ? employeeModel.secondName[0] : "") +
+      (employeeModel.firstLastName ? employeeModel.firstLastName[0] : "") +
+      (employeeModel.secondLastName ? employeeModel.secondLastName[0] : "")
+    ).toUpperCase();
+
+    // Genera un número aleatorio del 0 al 9
+    const randomNumber = Math.floor(Math.random() * 100);
+
+    // Combina el nombre de usuario y el número aleatorio
+    const code = `${username}${randomNumber}`;
+
+    // Agrega el campo 'code' al mapeo de campos y asigna el valor generado
+    employeeMapping['code'] = sql.VarChar(15);
+    request.input('code', employeeMapping['code'], code);
+
+    // Agrega los otros campos al mapeo de campos
+    for (const fieldEmployee in employeeMapping) {
+      if (fieldEmployee !== 'code') {
+        request.input(fieldEmployee, employeeMapping[fieldEmployee], employeeModel[fieldEmployee]);
+      }
+    }
+
+    const result = await request.query(employees_queries.addNewEmployee);
+
+    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+      const successMessage = result.recordset[0].Message;
+      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+    } else {
+      res.json(employeeModel); // Enviar el objeto roleModel si no hay mensaje de éxito
+    }
+
+  } catch (error) {
+    if (error.originalError) {
+      // Si hay un error original, muestra el mensaje personalizado
+      const errorMessage = error.originalError.message || "Error al crear el empleado";
+      console.error("Error al crear el empleado:", error);
+
+      res.status(500).json({ error: errorMessage });
+    } else {
+      // Muestra un mensaje de error genérico en caso de otro tipo de error
+      const errorMessage = error.message || "Error al crear el empleado";
+      console.error("Error al crear el empleado:", error);
+      res.status(500).json({
+        error: errorMessage
+      });
     }
   }
 }
@@ -143,43 +171,55 @@ export const getEmployeesById = async (req, res) => {
  * @param {Object} res - Objeto de respuesta HTTP utilizado para enviar una respuesta al cliente.
  */
 export const updateEmployee = async (req, res) => {
-  try {
-    // Obtener el código del empleado de la solicitud
-    const { code } = req.body;
+  const idEmployee = req.params.idEmployee;
+  const updatedEmployeeData = req.body;
 
-    // Establecer una conexión a la base de datos utilizando la función getConnection
+  try {
     const pool = await getConnection();
     const request = pool.request();
 
-    // Crear una instancia de EmployeeModel para mapear los campos de la solicitud
-    const employeeModel = new EmployeeModel(req.body);
+    const employeeMapping = EmployeesFieldMapping.getMappings();
 
-    // Obtener el mapeo de campos a parámetros desde EmployeesFieldMapping
-    const employeesMapping = EmployeesFieldMapping.getMappings();
+    // Añade el campo idEmployee para identificar el empleado que se actualizará
+    request.input("idEmployee", idEmployee);
 
-    // Recorrer y mapear los campos de la solicitud a los parámetros del procedimiento almacenado
-    for (const fieldName in employeesMapping) {
-      // Verificar si el campo existe en el modelo antes de mapearlo
-      if (employeeModel.hasOwnProperty(fieldName)) {
+    for (const fieldEmployee in updatedEmployeeData) {
+      if (employeeMapping[fieldEmployee]) {
         request.input(
-          fieldName,
-          employeesMapping[fieldName],
-          employeeModel[fieldName]
+          fieldEmployee,
+          employeeMapping[fieldEmployee],
+          updatedEmployeeData[fieldEmployee]
         );
       }
     }
 
-    // Ejecutar el procedimiento almacenado sp_UpdateEmployee utilizando la consulta definida en employees_queries
-    await request.query(employees_queries.updateEmployee);
+    const result = await request.query(employees_queries.updateEmployee);
 
-    // Enviar una respuesta exitosa al cliente
-    res.status(200).json({ message: 'Empleado actualizado exitosamente' });
+    if (
+      result &&
+      result.recordset &&
+      result.recordset[0] &&
+      result.recordset[0].Message
+    ) {
+      const successMessage = result.recordset[0].Message;
+      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+    } else {
+      res.json({
+        message:
+          "La información del empleado ha sido actualizada en la base de datos.",
+      });
+    }
   } catch (error) {
-    // Capturar y manejar cualquier error que ocurra durante la ejecución
-    console.error('Error al actualizar empleado:', error);
-
-    // Enviar una respuesta de error al cliente
-    res.status(500).json({ message: 'Error al actualizar empleado' });
+    if (error.originalError) {
+      const errorMessage =
+        error.originalError.message || "Error al actualizar el empleado";
+      console.error("Error al actualizar el empleado:", error);
+      res.status(500).json({ error: errorMessage });
+    } else {
+      const errorMessage = error.message || "Error al actualizar el empleado";
+      console.error("Error al actualizar el empleado:", error);
+      res.status(500).json({ error: errorMessage });
+    }
   }
 };
 
@@ -221,31 +261,4 @@ export const searchEmployee = async (req, res) => {
 
 
 
-
-/*export const searchEmployee = async (req, res) => {
-  try {
-    // Obtén el término de búsqueda directamente del cuerpo de la solicitud (req.body)
-    const { searchTerm } = req.body;
-    // Obtiene una conexión del pool de conexiones a la base de datos
-    const pool = await getConnection();
-    // Ejecuta la consulta SQL con el término de búsqueda como parámetro
-    const result = await pool
-      .request()
-      .input("searchTerm", sql.NVarChar(100), searchTerm)
-      .query(employees_queries.searchEmployee);
-    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
-    if (result.recordset.length > 0) {
-      // Responde con los resultados de la búsqueda en formato JSON
-      res.json(result.recordset);
-    } else {
-      // Si no se encontraron empleados que coincidan con el término de búsqueda, responde con un mensaje adecuado.
-      res.status(404).send("No se encontraron empleados con el término de búsqueda proporcionado.");
-    }
-  } catch (error) {
-    // Maneja errores, registra el error en la consola y responde con un código de estado 500 y el mensaje de error
-    console.error("Error al buscar empleados:", error);
-    res.status(500).send("Error al buscar empleados: " + error.message);
-  }
-};
-*/
 

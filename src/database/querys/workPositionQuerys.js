@@ -8,5 +8,6 @@
    * Consulta SQL para obtener la lista de todos los cargos de trabajo.
    */
   getListWorkPosition :  'EXEC StoredProcedure_GetWorkPosition ;',
-  getWorkPositionByEmployee : 'EXEC StoredProcedure_GetWorkPositionByEmployeesType @idEmployeeType ;'
+  getWorkPositionByEmployee : 'EXEC StoredProcedure_GetWorkPositionByEmployeesType @idEmployeeType ;',
+  getWorkPositionById : 'EXEC StoredProcedure_SearchWorkPositionById @idWorkposition ;'
 }
