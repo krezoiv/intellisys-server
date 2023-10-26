@@ -55,7 +55,7 @@ export const getWorkPositionById = async (req, res) => {
 
             res.json(result.recordset);
     } catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).json({ message: 'Error al obtener lista de puestos de trabajo' });
     }
 }

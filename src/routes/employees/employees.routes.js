@@ -24,7 +24,7 @@ router.post('/employeesById', getEmployeesById);
 
 router.post ('/searchEmployee', searchEmployee);
 
-
+    
 router.put('/employee/:idEmployee', updateEmployee);
 
 export default router;

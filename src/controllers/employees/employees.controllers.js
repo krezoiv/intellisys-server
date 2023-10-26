@@ -22,51 +22,7 @@ export const getEmployees = async (req, res) => {
   }
 };
 
-/**
- * Controlador para crear un nuevo empleado.
- * @param {Object} req - El objeto de solicitud HTTP que contiene los datos del empleado.
- * @param {Object} res - El objeto de respuesta HTTP para enviar una respuesta al cliente.
- */
-/*export const creatNewEmployee = async (req, res) => {
-  const employeeModel = new EmployeeModel(req.body);
 
-  try {
-    const pool = await getConnection();
-    const request = pool.request();
-
-    const employeeMapping = EmployeesFieldMapping.getMappings();
-    
-    for(const fieldsEmployee in employeeMapping){
-      request.input(fieldsEmployee, employeeMapping[fieldsEmployee], employeeModel[fieldsEmployee])  
-    }
-
-    const result = await request.query(employees_queries.addNewEmployee);
-
-    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
-      const successMessage = result.recordset[0].Message;
-      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
-    } else {
-      res.json(employeeModel); // Enviar el objeto roleModel si no hay mensaje de éxito
-    }
-
-  } catch (error) {
-    if (error.originalError) {
-      // Si hay un error original, muestra el mensaje personalizado
-      const errorMessage = error.originalError.message || "Error al crear el empleado";
-      console.error("Error al crear el empleado:", error);
-
-      res.status(500).json({ error: errorMessage });
-    } else {
-      // Muestra un mensaje de error genérico en caso de otro tipo de error
-      const errorMessage = error.message || "Error al crear el empleado";
-      console.error("Error al crear el empleado:", error);
-      res.status(500).json({ 
-        error: errorMessage
-       });
-    }
-  }
-}
-*/
 
 export const creatNewEmployee = async (req, res) => {
   // Capitaliza la primera letra de cada palabra en los campos del objeto req.body
@@ -174,12 +130,43 @@ export const getEmployeesById = async (req, res) => {
 };
 
 
+
 /**
- * Actualiza un empleado en la base de datos.
- *
- * @param {Object} req - Objeto de solicitud HTTP que contiene los datos del empleado a actualizar.
- * @param {Object} res - Objeto de respuesta HTTP utilizado para enviar una respuesta al cliente.
+ * @function searchEmployee
+ * @description Busca empleados en la base de datos que coincidan con un término de búsqueda y responde con los resultados en formato JSON.
+ * @param {Object} req - Objeto de solicitud HTTP que debe contener el término de búsqueda en el cuerpo (req.body).
+ * @param {Object} res - Objeto de respuesta HTTP.
  */
+
+export const searchEmployee = async (req, res) => {
+  try {
+    // Obtén el término de búsqueda directamente del cuerpo de la solicitud (req.body)
+    const { searchTerm } = req.body;
+    // Obtiene una conexión del pool de conexiones a la base de datos
+    const pool = await getConnection();
+    // Ejecuta la consulta SQL con el término de búsqueda como parámetro
+    const result = await pool
+      .request()
+      .input("searchTerm", sql.NVarChar(100), searchTerm)
+      .query(employees_queries.searchEmployee);
+    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
+    res.json(result.recordset);
+  } catch (error) {
+    if (error.originalError){
+      const errorMessage = error.originalError.message || "Error en la búsqueda de empleado";
+      console.error(error);
+      res.status(500).json({ error : errorMessage });
+    } else {
+      const errorMessage = error.message || "Error en la búsqueda de empleado";
+      console.error("Error en la búsqueda", error);
+      res.status(500).json({
+        error: errorMessage
+      })
+    }
+  }
+};
+
+
 export const updateEmployee = async (req, res) => {
   const idEmployee = req.params.idEmployee;
   const updatedEmployeeData = req.body;
@@ -232,43 +219,5 @@ export const updateEmployee = async (req, res) => {
     }
   }
 };
-
-/**
- * @function searchEmployee
- * @description Busca empleados en la base de datos que coincidan con un término de búsqueda y responde con los resultados en formato JSON.
- * @param {Object} req - Objeto de solicitud HTTP que debe contener el término de búsqueda en el cuerpo (req.body).
- * @param {Object} res - Objeto de respuesta HTTP.
- */
-
-export const searchEmployee = async (req, res) => {
-  try {
-    // Obtén el término de búsqueda directamente del cuerpo de la solicitud (req.body)
-    const { searchTerm } = req.body;
-    // Obtiene una conexión del pool de conexiones a la base de datos
-    const pool = await getConnection();
-    // Ejecuta la consulta SQL con el término de búsqueda como parámetro
-    const result = await pool
-      .request()
-      .input("searchTerm", sql.NVarChar(100), searchTerm)
-      .query(employees_queries.searchEmployee);
-    // Verifica si la consulta SQL tuvo éxito y si se encontraron resultados
-    res.json(result.recordset);
-  } catch (error) {
-    if (error.originalError){
-      const errorMessage = error.originalError.message || "Error en la búsqueda de empleado";
-      console.error(error);
-      res.status(500).json({ error : errorMessage });
-    } else {
-      const errorMessage = error.message || "Error en la búsqueda de empleado";
-      console.error("Error en la búsqueda", error);
-      res.status(500).json({
-        error: errorMessage
-      })
-    }
-  }
-};
-
-
-
 
 

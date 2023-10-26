@@ -30,18 +30,18 @@ export const employees_queries = {
     searchEmployee: 'EXEC StoredProcedure_SearchEmployee @searchTerm',
     
     updateEmployee: 'EXEC StoredProcedure_UpdateEmployee ' +
-      '@idEmployee, ' +
-      '@firstName, ' +
-      '@secondName, ' +
-      '@firstLastName, ' +
-      '@secondLastName, ' +
-      '@hireDate, ' +
-      '@idCampus, ' +
-      '@idWorkposition, ' +
-      '@idMunicipality, ' +
-      '@addressReference, ' +
-      '@BACaccount, ' +
-      '@BAMaccount'
+  '@idEmployee = @idEmployee, ' +
+  '@firstName = @firstName, ' +
+  '@secondName = @secondName, ' +
+  '@firstLastName = @firstLastName, ' +
+  '@secondLastName = @secondLastName, ' +
+  '@hireDate = @hireDate, ' +
+  '@idCampus = @idCampus, ' +
+  '@idWorkposition = @idWorkposition, ' +
+  '@idMunicipality = @idMunicipality, ' +
+  '@addressReference = @addressReference, ' +
+  '@BACaccount = @BACaccount, ' +
+  '@BAMaccount = @BAMaccount'
  
  
   };
