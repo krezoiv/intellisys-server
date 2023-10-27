@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { creatNewEmployee, getEmployees, getEmployeesById, searchEmployee, updateEmployee } from "../../controllers/employees/employees.controllers";
+import { creatNewEmployee, deactivateEmployee, deleteEmployee, getEmployees, getEmployeesById, searchEmployee, updateEmployee } from "../../controllers/employees/employees.controllers";
 import {authenticateToken} from "../../middlewares/authenticateToken"
 // Crea un enrutador Express
 const router = Router();
@@ -26,5 +26,6 @@ router.post ('/searchEmployee', searchEmployee);
 
     
 router.put('/employee/:idEmployee', updateEmployee);
-
+router.put('/employeeDeactivate/:idEmployee', deactivateEmployee);
+router.delete('/employee/:idEmployee', deleteEmployee);
 export default router;

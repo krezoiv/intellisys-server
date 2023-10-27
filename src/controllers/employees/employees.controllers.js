@@ -220,4 +220,62 @@ export const updateEmployee = async (req, res) => {
   }
 };
 
+/**
+ * @function deleteEmployee
+ * @description Elimina un empleado de la base de datos utilizando el procedimiento almacenado.
+ */
+export const deleteEmployee = async (req, res) => {
+  try {
+    // Obtiene el ID del empleado a eliminar del cuerpo de la solicitud (req.body)
+    const { idEmployee } = req.params;
+    
+    // Obtiene una conexión del pool de conexiones a la base de datos
+    const pool = await getConnection();
+
+    // Ejecuta el procedimiento almacenado para eliminar el empleado
+    const result = await pool
+      .request()
+      .input("idEmployee", sql.Int, idEmployee)
+      .query(employees_queries.deleteEmployee);
+
+      if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+        const successMessage = result.recordset[0].Message;
+        res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+      } else {
+        res.json("Error al eliminar el empleado:"); // Enviar el objeto roleModel si no hay mensaje de éxito
+      }
+  } catch (error) {
+    // Maneja errores, registra el error en la consola y responde con un código de estado 500 y el mensaje de error
+    console.error("Error al eliminar el empleado:", error);
+    res.status(500).json({ error: "Error al eliminar el empleado: " + error.message });
+  }
+};
+
+
+export const deactivateEmployee = async (req, res ) => {
+  try {
+    // Obtén el ID del empleado a desactivar desde la solicitud (req.params)
+    const { idEmployee } = req.params;
+
+    // Obtiene una conexión del pool de conexiones a la base de datos
+    const pool = await getConnection();
+
+    // Ejecuta el procedimiento almacenado para desactivar al empleado
+    const result = await pool
+      .request()
+      .input('idEmployee', sql.Int, idEmployee)
+      .query(employees_queries.deactivateEmployee);
+
+    if (result && result.recordset && result.recordset[0] && result.recordset[0].Message) {
+      const successMessage = result.recordset[0].Message;
+      res.json({ message: successMessage }); // Enviar el mensaje de éxito al cliente
+    } else {
+      res.json('Error al desactivar al empleado.'); // Enviar un mensaje de error si no hay mensaje de éxito
+    }
+  } catch (error) {
+    // Manejar errores, registrar el error en la consola y responder con un código de estado 500 y el mensaje de error
+    console.error('Error al desactivar al empleado:', error);
+    res.status(500).json({ error: 'Error al desactivar al empleado: ' + error.message });
+  }
+};
 
