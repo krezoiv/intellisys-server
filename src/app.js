@@ -9,6 +9,7 @@ import employeeType from './routes/employees/employeesType.routes';
 import roleRoute from './routes/employees/roles.routes'
 import usersRoute from './routes/users/users.routes';
 import campusRoute from './routes/locations/campus.routes';
+import routesRoute from './routes/locations/routes.routes';
 import authRoute from './routes/users/auth.routes';
 import municipalityRoute from './routes/locations/municipality.routes';
 import departmentRoute from './routes/locations/departments.routes';
@@ -30,6 +31,7 @@ app.use(roleRoute);
 app.use(usersRoute);
 app.use(authRoute);
 app.use(campusRoute);
+app.use(routesRoute);
 app.use(municipalityRoute);
 app.use(departmentRoute);
 

@@ -9,8 +9,8 @@ dotenv.config();
 const dbSettings = {
   user: "sa",// Nombre de usuario de la base de datos
   password: "krezoiv@1984", // Contraseña de la base de datos
-  //server: "192.168.1.63",     // Servidor de la base de datos
-  server: "192.168.1.71",     // Servidor de la base de datos
+  server: "192.168.1.63",     // Servidor de la base de datos
+  //server: "192.168.1.71",     // Servidor de la base de datos
   database: "IntelliSys_DB", 
   port: 1433,// Nombre de la base de datos
   options: {

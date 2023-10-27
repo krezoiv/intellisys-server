@@ -9,13 +9,15 @@ class CampusModel {
     // que contiene las propiedades idCampus y campusName.
     constructor({
         idCampus,
-        campusName
+        campusName,
+        idMunicipality
     }){
         // Utilizamos Object.assign para asignar las propiedades del objeto argumento
         // a las propiedades de la instancia de la clase CampusModel.
         Object.assign(this,{
             idCampus,
-            campusName
+            campusName,
+            idMunicipality
         });
     }
 }
