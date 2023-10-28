@@ -47,5 +47,7 @@ export const employees_queries = {
 
     deleteEmployee : "StoredProcedure_DeleteEmployee @idEmployee",
 
-    deactivateEmployee : "StoredProcedure_Deactivatemployee @idEmployee"
+    deactivateEmployee : "StoredProcedure_Deactivatemployee @idEmployee",
+
+    searchEmployecampusRouts : "EXEC StoredProcedure_SearchEmployeeRoutes @code"
 };

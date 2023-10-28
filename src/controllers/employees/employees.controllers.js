@@ -279,3 +279,25 @@ export const deactivateEmployee = async (req, res ) => {
   }
 };
 
+export const searchEmployeeRoutes = async (req, res) => {
+  try {
+    const {code} = req.body;
+    const pool = await  getConnection();
+    const result = await pool.request()
+      .input("code", sql.NVarChar(15), code).query(employees_queries.searchEmployecampusRouts);
+
+      res.json(result.recordset);
+  } catch (error) {
+    if (error.originalError){
+      const errorMessage = error.originalError.message || "Error en la búsqueda de rutas de la sede";
+      console.error(error);
+      res.status(500).json({ error : errorMessage });
+    } else {
+      const errorMessage = error.message || "Error en la búsqueda de rutas de la sede";
+      console.error("Error en la búsqueda", error);
+      res.status(500).json({
+        error: errorMessage
+      })
+    }
+  }
+}
