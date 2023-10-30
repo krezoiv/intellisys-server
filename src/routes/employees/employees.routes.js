@@ -28,5 +28,5 @@ router.post ('/searchEmployee', searchEmployee);
 router.put('/employee/:idEmployee', updateEmployee);
 router.put('/employeeDeactivate/:idEmployee', deactivateEmployee);
 router.delete('/employee/:idEmployee', deleteEmployee);
-router.get('/employeeCampusRoutes', searchEmployeeRoutes)
+router.post('/employeeCampusRoutes', searchEmployeeRoutes)
 export default router;

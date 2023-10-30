@@ -25,8 +25,9 @@ class EmployeesFieldMappings {
       idWorkposition : sql.Int,
       idMunicipality : sql.Int,
       addressReference : sql.VarChar(200),
-      BACaccount : sql.VarChar(50),
-      BAMaccount : sql.VarChar(50),
+      BACaccount : sql.BigInt,
+      BAMaccount : sql.BigInt,
+      dpi : sql.BigInt
     };
   }
 

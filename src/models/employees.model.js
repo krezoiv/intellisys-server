@@ -15,6 +15,7 @@ class EmployeeModel {
     addressReference,
     BACaccount,
     BAMaccount,
+    dpi
   }) {
     Object.assign(this, {
       idEmployee,
@@ -32,6 +33,7 @@ class EmployeeModel {
       addressReference,
       BACaccount,
       BAMaccount,
+      dpi
     });
   }
 }

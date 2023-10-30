@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { geAllCampus } from "../../controllers/locations/campus.controllers";
+import { geAllCampus, getCampusByEmployee } from "../../controllers/locations/campus.controllers";
 
 const router = Router();
 
@@ -9,6 +9,7 @@ const router = Router();
 
 // Ruta GET para obtener una lista de las sedes
 router.get('/campus', geAllCampus)
+router.post('/employeesByCodeCampus', getCampusByEmployee)
 
 // Exportar el enrutador para su uso en otras partes de la aplicación
 export default router;

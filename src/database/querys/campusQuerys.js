@@ -7,5 +7,7 @@ export const campus_queries = {
      * 
      * @type {string}
      */
-    getCampus: 'EXEC StoredProcedure_GetCampus;'
+    getCampus: 'EXEC StoredProcedure_GetCampus;',
+    getCampusByEmployee: 'EXEC StoredProcedure_SearchEmployeeRoutesCampus @code, @idCampus ;',
+
 };

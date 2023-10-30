@@ -20,7 +20,7 @@ export const employees_queries = {
     "@firstLastName, @secondLastName, " +
     "@hireDate, @idCampus," +
     "@idWorkposition, @idMunicipality, @addressReference," +
-    "@BACaccount, @BAMaccount",
+    "@BACaccount, @BAMaccount, @dpi",
 
   /**
    * @property {string} getEmployeeById

@@ -85,10 +85,13 @@ export const newUser = async (req, res) => {
 
     if (employeeResult.recordset.length > 0) {
       const firstName = employeeResult.recordset[0].firstName;
+      const secondName = employeeResult.recordset[0].secondName;
       const firstLastName = employeeResult.recordset[0].firstLastName;
-
+      const randomNumber = Math.floor(Math.random() * 10 );
+    
       // Construir el valor de userName en mayúsculas
-      const userName = `${firstName.charAt(0)}${firstLastName}`.toUpperCase();
+      
+      const userName = `${firstName.charAt(0)}${firstLastName}${randomNumber}`.toUpperCase();
 
       // Actualizar el campo 'userName' en el objeto userModel
       userModel.userName = userName;

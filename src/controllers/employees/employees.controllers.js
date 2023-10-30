@@ -1,4 +1,5 @@
 import { getConnection, sql} from "../../database";
+
 import EmployeeModel from "../../models/employees.model";
 import EmployeesFieldMapping from "../../mapping/employeesMapping";
 import { employees_queries } from "../../database/querys/employeesQuerys";
@@ -26,10 +27,19 @@ export const getEmployees = async (req, res) => {
 
 export const creatNewEmployee = async (req, res) => {
   // Capitaliza la primera letra de cada palabra en los campos del objeto req.body
+  const capitalizeWords = (str) => {
+    return str.replace(/\w\S*/g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
+
   const capitalizedBody = {};
   for (const key in req.body) {
-    if (typeof req.body[key] === 'string') {
-      capitalizedBody[key] = req.body[key].replace(/\b\w/g, (match) => match.toUpperCase());
+    if (key === 'idCampus') {
+      // Si el campo es 'idCampus', no aplicamos capitalizeWords
+      capitalizedBody[key] = req.body[key];
+    } else if (typeof req.body[key] === 'string') {
+      capitalizedBody[key] = capitalizeWords(req.body[key]);
     } else {
       capitalizedBody[key] = req.body[key];
     }

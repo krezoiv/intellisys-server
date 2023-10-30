@@ -6,6 +6,7 @@ const app = express();
 import employeesRoute from './routes/employees/employees.routes';
 import workPositionRoute from './routes/employees/workPosition.routes';
 import employeeType from './routes/employees/employeesType.routes';
+import dlpAssignment from './routes/employees/dlpAssignment.routes'
 import roleRoute from './routes/employees/roles.routes'
 import usersRoute from './routes/users/users.routes';
 import campusRoute from './routes/locations/campus.routes';
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(employeesRoute);
 app.use(workPositionRoute);
 app.use(employeeType);
+app.use(dlpAssignment);
 app.use(roleRoute);
 app.use(usersRoute);
 app.use(authRoute);

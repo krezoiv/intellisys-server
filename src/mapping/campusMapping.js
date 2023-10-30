@@ -1,8 +1,8 @@
 import sql from 'mssql';
 
 /**
- * @class CampusFieldMappings
- * @description Clase que define los mapeos de campos SQL para la tabla de las campus (sedes).
+ * @class EmployeesFieldMappings
+ * @description Clase que define los mapeos de campos SQL para la tabla de empleados.
  */
 class CampusFieldMappings {
   /**
@@ -10,12 +10,12 @@ class CampusFieldMappings {
    * @description Constructor de la clase que inicializa los mapeos de campos SQL.
    */
   constructor() {
-    // Define los mapeos de campos SQL para varios campos de la tabla de campus (sedes)
-    this.fieldCampusMappings = {
+    // Define los mapeos de campos SQL para varios campos de la tabla de empleados
+    this.fieldMappings = {
       
       idCampus : sql.VarChar(3),
       campusName : sql.VarChar(25),
-
+      idMunicipality : sql.Int
     };
   }
 
@@ -25,9 +25,9 @@ class CampusFieldMappings {
    * @returns {Object} - Un objeto que contiene los mapeos de campos SQL.
    */
   getMappings() {
-    return this.fieldCampusMappings;
+    return this.fieldMappings;
   }
 }
 
-// Exporta una instancia de la clase CampusFieldMappings
+// Exporta una instancia de la clase EmployeesFieldMappings
 export default new CampusFieldMappings();
